@@ -25,7 +25,7 @@
 
 </div>
 
-This sample is originally forked from [Azure-Samples/serverless-chat-langchainjs](https://github.com/Azure-Samples/serverless-chat-langchainjs) and has been modified to integrate with the **Microsoft Purview API**. This integration showcases how Purview can be used to **audit and secure AI prompts and responses**.All deployment instructions remain the same as in the original repository. However, there are additional setup steps required for the Purview integration, which are explained in the [Purview API Integration](#purview-api-integration) section below.
+This sample is originally forked from [Azure-Samples/serverless-chat-langchainjs](https://github.com/Azure-Samples/serverless-chat-langchainjs) and has been modified to integrate with the **Microsoft Purview API**. This integration showcases how Purview can be used to **audit and secure AI prompts and responses**. Most of the deployment instructions remain the same as in the original repository. However, there are additional steps required for the Purview integration,and it has to be done pre-deployment phase and explained in the [Purview API Integration](#purview-api-integration) section below.
 
 This sample shows how to build a serverless AI chat experience with Retrieval-Augmented Generation using [LangChain.js](https://js.langchain.com/) and Azure. The application is hosted on [Azure Static Web Apps](https://learn.microsoft.com/azure/static-web-apps/overview) and [Azure Functions](https://learn.microsoft.com/azure/azure-functions/functions-overview?pivots=programming-language-javascript), with [Azure Cosmos DB for NoSQL](https://learn.microsoft.com/azure/cosmos-db/nosql/vector-) as the vector database. You can use it as a starting point for building more complex AI applications.
 
@@ -127,7 +127,11 @@ See the [cost estimation](./docs/cost.md) details for running this sample on Azu
 
 ### Purview API Integration
 
-### Register the backend app (backend-node-api)
+As part of the Purview API integration, the app must first authenticate with Microsoft Entra ID, and then acquire a Purview Graph token. This token enables Purview policies to be enforced for both the user and the application. Based on the applicable policy, the app will invoke the appropriate APIs.
+
+The sections below explain the manual steps required to set up the Entra app registrations needed to obtain the token. These app registration details will later be used during deployment to configure the sample.
+
+#### Register the backend app (backend-node-api)
 
 1. Navigate to the [Microsoft Entra admin center](https://entra.microsoft.com) and select the **Microsoft Entra ID** service.
 1. Select the **App Registrations** blade on the left, then select **New registration**.
@@ -141,7 +145,7 @@ See the [cost estimation](./docs/cost.md) details for running this sample on Azu
     1. For this sample, accept the proposed Application ID URI (`api://{clientId}`) by selecting **Save**.
         > :information_source: Read more about Application ID URI at [Validation differences by supported account types (signInAudience)](https://docs.microsoft.com/azure/active-directory/develop/supported-accounts-validation).
 
-#### Publish Delegated Permissions
+##### Publish Delegated Permissions
 
 1. All APIs must publish a minimum of one [scope](https://docs.microsoft.com/azure/active-directory/develop/v2-oauth2-auth-code-flow#request-an-authorization-code), also called [Delegated Permission](https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#permission-types), for the client apps to obtain an access token for a *user* successfully. To publish a scope, follow these steps:
 1. Select **Add a scope** button open the **Add a scope** screen and Enter the values as indicated below:
@@ -164,7 +168,7 @@ See the [cost estimation](./docs/cost.md) details for running this sample on Azu
    - You'll need this key later to during the package deployment through `azd up` command. . This key value will not be displayed again, nor retrievable by any other means,
      so record it as soon as it is visible from the Azure portal.
 
-#### Configure/grant the service app (backend-node-api) permissions to invoke the Purview API
+##### Configure/grant the service app (backend-node-api) permissions to invoke the Purview API
 
 > In the steps below, "ClientID" is the same as "Application ID" or "AppId".
 
@@ -176,7 +180,7 @@ https://login.microsoftonline.com/organizations/v2.0/adminconsent?client_id=%3CC
 1. Find the key `Enter_the_Application_Id_Here` and replace the existing value with the application ID (clientId) of `msal-node-api` app copied from the Microsoft Entra admin center.
 1. Find the key `Enter_the_Tenant_Info_Here` and replace the existing value with your Microsoft Entra tenant/directory ID.
 
-### Register the client app (front-end-javascript-spa)
+#### Register the client app (front-end-javascript-spa)
 
 1. Navigate to the [Microsoft Entra admin center](https://entra.microsoft.com) and select the **Microsoft Entra ID** service.
 1. Select the **App Registrations** blade on the left, then select **New registration**.
@@ -198,7 +202,7 @@ https://login.microsoftonline.com/organizations/v2.0/adminconsent?client_id=%3CC
     1. In the **Delegated permissions** section, select **access_as_user** in the list. Use the search box if necessary.
     1. Select the **Add permissions** button at the bottom.
 
-#### Configure the client app (front-end-javascript-spa) to use your app registration
+##### Configure the client app (front-end-javascript-spa) to use your app registration
 
 Open the project in your IDE (like VVisual Studio Code) to configure the code.
 
@@ -215,7 +219,7 @@ VITE_AZURE_AD_AUTHORITY_HOST="https://login.microsoftonline.com/organizations"
 VITE_BACKEND_API_SCOPE="api://<API_ID>/access_as_user"
 ```
 
-#### Deploy the sample
+### Deploy the sample
 
 1. Open a terminal and navigate to the root of the project.
 2. Authenticate with Azure by running `azd auth login`.
