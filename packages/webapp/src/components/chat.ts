@@ -132,7 +132,7 @@ export class ChatComponent extends LitElement {
     try {
       const response = getCompletion({
         ...this.options,
-        messages: this.messages,        
+        messages: this.messages,
         context: {
           userId: this.userId,
           sessionId: this.sessionId,
@@ -271,7 +271,6 @@ export class ChatComponent extends LitElement {
   protected renderCitation = (citation: string, index: number) => {
     // Extract filename and label_name from the citation
     const [filename, labelName] = citation.split('(Label:').map((part) => part.trim().replace(')', ''));
-  
     return html`
       <button
         class="citation"

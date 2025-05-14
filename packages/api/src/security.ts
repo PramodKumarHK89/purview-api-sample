@@ -10,19 +10,16 @@ export function getCredentials(): DefaultAzureCredential {
   // No secrets needed, it uses `az login` or `azd auth login` locally,
   // and managed identity when deployed on Azure.
 
-  //p4ai - needed to handle the local debugging
   // VS code often causes issues and gets confused with which account to be loaded. So explicitly pass the tenant id
   if (process.env.AZURE_ENV_TYPE === 'dev') {
-      const options: DefaultAzureCredentialOptions = {
+    const options: DefaultAzureCredentialOptions = {
       tenantId: process.env.AZURE_TENANT_ID, // Explicitly set the tenant ID
-    };  
+    };
     credentials ||= new DefaultAzureCredential(options);
-  }
-  else
-  {  
+  } else {
     credentials ||= new DefaultAzureCredential();
   }
-  //p4ai-change end
+
   return credentials;
 }
 

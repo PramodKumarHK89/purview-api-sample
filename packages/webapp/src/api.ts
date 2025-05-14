@@ -1,5 +1,5 @@
 import { AIChatMessage, AIChatCompletionDelta, AIChatProtocolClient } from '@microsoft/ai-chat-protocol';
-import { acquireToken } from './auth'; // Import the acquireToken method
+import { acquireToken } from './auth.js'; // Import the acquireToken method
 
 export const apiBaseUrl: string = import.meta.env.VITE_API_URL || '';
 
@@ -15,10 +15,10 @@ const originalFetch = window.fetch;
 window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
   try {
     // Check if the request is for the API
-    const url = typeof input === 'string' ? input : '';   
+    const url = typeof input === 'string' ? input : '';
     if (url.includes('api/chats/stream')) {
-      // Acquire the token for API calls      
-      const token = await acquireToken();          
+      // Acquire the token for API calls
+      const token = await acquireToken();
       if (!token) {
         throw new Error('Failed to acquire token. User may not be signed in.');
       }
@@ -27,16 +27,17 @@ window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Res
       const headers = new Headers(init?.headers);
       headers.set('Authorization', `Bearer ${token}`);
 
-      return originalFetch(input, { ...init, headers });
+      return await originalFetch(input, { ...init, headers });
     }
 
     // For non-API calls, proceed without modification
-    return originalFetch(input, init);
+    return await originalFetch(input, init);
   } catch (error) {
     console.error('Error in custom fetch:', error);
     throw error;
   }
 };
+
 export async function* getCompletion(options: ChatRequestOptions) {
   const apiUrl = options.apiUrl || apiBaseUrl;
   const client = new AIChatProtocolClient(`${apiUrl}/api/chats`);

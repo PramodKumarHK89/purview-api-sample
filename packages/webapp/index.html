@@ -96,9 +96,9 @@
         Contoso Enterprise ChatBot
       </div>
       <div class="right">
-        <span class="user-name" id="userName" style="display: none;"></span>
+        <span class="user-name" id="userName" style="display: none"></span>
         <button id="signInButton">Sign In</button>
-        <button id="signOutButton" style="display: none;">Sign Out</button>
+        <button id="signOutButton" style="display: none">Sign Out</button>
       </div>
     </nav>
     <div class="banner" id="loginBanner">
@@ -146,10 +146,9 @@
 
       // Event Listeners for chat components
       chatHistory.addEventListener('loadSession', (e) => {
-        const { id, messages } = e.detail;        
+        const { id, messages } = e.detail;
         chat.sessionId = id;
         chat.messages = messages;
-        
       });
 
       chat.addEventListener('messagesUpdated', () => {
@@ -163,8 +162,8 @@
           const userId = getUserId();
           const displayName = user.name || 'User'; // Use the user's display name if available
           localStorage.setItem('displayName', displayName); // Store display name in localStorage
-      
-          const userUpn = user.username || 'Not Available'; 
+
+          const userUpn = user.username || 'Not Available';
           localStorage.setItem('userUpn', userUpn); // Store UPN in localStorage
           signInButton.style.display = 'none';
           signOutButton.style.display = 'inline';
@@ -175,8 +174,7 @@
           userNameSpan.textContent = `Welcome, ${displayName}`;
           userNameSpan.title = `UPN: ${userUpn}`; // Add UPN as a tooltip
           userNameSpan.style.display = 'inline';
-          loginBanner.style.display = 'none'; // Hide the banner after signing in 
-
+          loginBanner.style.display = 'none'; // Hide the banner after signing in
         }
       });
 
