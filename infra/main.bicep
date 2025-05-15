@@ -132,8 +132,8 @@ module api './app/api.bicep' = {
       AZURE_COSMOSDB_NOSQL_ENDPOINT: cosmosDb.outputs.endpoint
       AZURE_STORAGE_URL: storageUrl
       AZURE_STORAGE_CONTAINER_NAME: blobContainerName      
-      AZURE_AD_CLIENT_ID: backendAPICLientId
-      AZURE_AD_CLIENT_SECRET: backendAPIClientSecret
+      AZURE_AD_API_ID: backendAPICLientId
+      AZURE_AD_API_SECRET: backendAPIClientSecret
       AZURE_AD_AUTHORITY_HOST: azureAdAuthorityHost
       AZURE_AD_GRAPH_SCOPE: azureAdGraphScope
       PURVIEW_BASE_URL: purviewBaseUrl                   
@@ -406,8 +406,8 @@ output API_URL string = useVnet ? '' : api.outputs.uri
 output WEBAPP_URL string = webapp.outputs.uri
 output UPLOAD_URL string = useVnet ? webapp.outputs.uri : api.outputs.uri
 
-output AZURE_AD_CLIENT_ID string = backendAPICLientId
-output AZURE_AD_CLIENT_SECRET string = backendAPIClientSecret
+output AZURE_AD_API_ID string = backendAPICLientId
+output AZURE_AD_API_SECRET string = backendAPIClientSecret
 output AZURE_AD_AUTHORITY_HOST string = azureAdAuthorityHost
 output AZURE_AD_GRAPH_SCOPE string = azureAdGraphScope
 output PURVIEW_BASE_URL string = purviewBaseUrl

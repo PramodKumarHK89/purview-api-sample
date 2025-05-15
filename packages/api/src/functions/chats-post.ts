@@ -50,8 +50,8 @@ const sessionProtectionDataMap = new Map<string, { etag: string; activityExecuti
 
 const msalConfig = {
   auth: {
-    clientId: process.env.AZURE_AD_CLIENT_ID!,
-    clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
+    clientId: process.env.AZURE_AD_API_ID!,
+    clientSecret: process.env.AZURE_AD_API_SECRET!,
     authority: process.env.AZURE_AD_AUTHORITY_HOST!,
   },
 };
@@ -127,7 +127,7 @@ function processProtectionScopeApiResponse(
         const locations = entry.locations || [];
         if (Array.isArray(locations)) {
           for (const location of locations) {
-            if (location?.value === process.env.AZURE_AD_CLIENT_ID) {
+            if (location?.value === process.env.AZURE_AD_API_ID) {
               isValidAppId = true;
               break;
             }
@@ -162,7 +162,7 @@ function processProtectionScopeApiResponse(
         // Validate the locations array
         const locations = Array.isArray(entry.locations) ? entry.locations : [];
         for (const location of locations) {
-          if (location?.value === process.env.AZURE_AD_CLIENT_ID) {
+          if (location?.value === process.env.AZURE_AD_API_ID) {
             isValidAppId = true;
             break;
           }
@@ -255,7 +255,7 @@ export async function postChats(request: HttpRequest, context: InvocationContext
         currentSequence,
         sessionId,
         'uploadText',
-        process.env.AZURE_AD_CLIENT_ID || '',
+        process.env.AZURE_AD_API_ID || '',
       );
 
       context.log('ProcessContent Request Body:For the uploadText API(prompt)');
@@ -418,7 +418,7 @@ export async function postChats(request: HttpRequest, context: InvocationContext
         currentSequence,
         sessionId,
         'downloadText',
-        process.env.AZURE_AD_CLIENT_ID || '',
+        process.env.AZURE_AD_API_ID || '',
       );
       context.log('ProcessContent Request Body:For the downloadText API(Response)');
       context.log(JSON.stringify(processContentRequestBodyForLLM));
@@ -506,7 +506,7 @@ export async function postChats(request: HttpRequest, context: InvocationContext
         accessToken,
         etagIdentifier,
         'BuildDemo-P4AI',
-        process.env.AZURE_AD_CLIENT_ID || '',
+        process.env.AZURE_AD_API_ID || '',
         uploadTextExecutionMode,
         downloadTextExecutionMode,
         question,
