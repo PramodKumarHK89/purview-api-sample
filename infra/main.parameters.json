@@ -9,7 +9,7 @@
       "value": "${AZURE_CLIENT_ID}"
     },
      "backendAPIClientSecret": {
-      "value": "${AZURE_CREDENTIALS}"
+      "value": "${AZURE_CLIENT_ID}"
     },
     "resourceGroupName": {
       "value": "${AZURE_RESOURCE_GROUP}"
